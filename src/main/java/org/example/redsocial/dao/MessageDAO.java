@@ -5,7 +5,10 @@ import org.example.redsocial.model.Message;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MessageDAO {
 
@@ -21,8 +24,10 @@ public class MessageDAO {
         String query = "INSERT INTO message (message, fullName,date) VALUES (?, ?,?)";
 
         // Obtener la conexión dentro del método
-        try (Connection connection = dbConnection.getConnection();
-             PreparedStatement ps = connection.prepareStatement(query)) {
+        try {
+
+            Connection connection = dbConnection.getConnection();
+            PreparedStatement ps = connection.prepareStatement(query);
 
             ps.setString(1, mensaje.getMessage());
             ps.setString(2, mensaje.getFullName());
@@ -35,8 +40,30 @@ public class MessageDAO {
         }
     }
 
-    public static void listMessagesDB(){
+    public List<Message> listMessagesDB(){
+        List<Message> messagesList = new ArrayList();
+        String query = "select * from message";
 
+    try{
+
+        Connection connection = dbConnection.getConnection();
+        PreparedStatement ps = connection.prepareStatement(query);
+        ResultSet rs = ps.executeQuery();
+
+        while(rs.next()) {
+            Message message = new Message();
+            message.setMessageId(rs.getInt(1));
+            message.setMessage(rs.getString(2));
+            message.setFullName(rs.getString(3));
+            message.setDate(rs.getString(4));
+            messagesList.add(message);
+        }
+
+       }catch (SQLException e) {
+       System.err.println("Error al crear mensaje: " + e.getMessage());
+    }
+
+    return messagesList;
     }
 
     public static void deleteMessageDB(Message mensaje){
@@ -45,4 +72,6 @@ public class MessageDAO {
     public static void updateMessageDB(Message mensajes){
 
     }
+
+
 }

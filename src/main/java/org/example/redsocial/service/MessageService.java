@@ -35,7 +35,16 @@ public class MessageService {
         }
     }
 
-    public static void listMessages(){
+    public void listMessages(){
+
+        for (Message message : messageDAO.listMessagesDB()){
+            System.out.println("");
+            System.out.println("ID: " + message.getMessageId());
+            System.out.println("Mensaje: " + message.getMessage());
+            System.out.println("Autor: " + message.getFullName());
+            System.out.println("Fecha: " + message.getDate());
+
+        }
 
     }
 
