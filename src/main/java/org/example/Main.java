@@ -38,7 +38,7 @@ public class Main {
                     messageService.createMessage(sc);// Pasa el Scanner como parámetro
                     break;
                 case 2:
-                    MessageService.listMessages();
+                    messageService.listMessages();
                     break;
                 case 3:
                     MessageService.updateMessage();
