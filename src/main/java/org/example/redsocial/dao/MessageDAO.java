@@ -72,9 +72,9 @@ public class MessageDAO {
 
         try{
             Connection connection = dbConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setInt(1, messageId);
-            int countRowsUpdated = statement.executeUpdate();
+            PreparedStatement ps  = connection.prepareStatement(query);
+            ps .setInt(1, messageId);
+            int countRowsUpdated = ps .executeUpdate();
             if (countRowsUpdated != 0) {
                 System.out.println("El mensaje con id " + messageId + " ha sido eliminado correctamente.");
             } else {
@@ -88,9 +88,67 @@ public class MessageDAO {
         }
 
     }
-    public static void updateMessageDB(Message mensajes){
+
+    public void updateMessageDB(Message mensaje){
+        String query = "UPDATE message SET message = ?, fullName = ?, date = ? WHERE messageId = ?";
+
+        try{
+            Connection connection = dbConnection.getConnection();
+            PreparedStatement ps  = connection.prepareStatement(query);
+
+            ps.setString(1, mensaje.getMessage()); // Nuevo texto del mensaje
+            ps.setString(2, mensaje.getFullName()); // Nuevo nombre completo
+            ps.setTimestamp(3, new java.sql.Timestamp(System.currentTimeMillis()));
+            ps.setInt(4, mensaje.getMessageId());
+
+            int countRowsUpdated = ps.executeUpdate();
+
+            if (countRowsUpdated != 0) {
+                System.out.println("El mensaje con id " + mensaje.getMessageId() + " ha sido actualizado correctamente.");
+            } else {
+                System.out.println("El mensaje con id " + mensaje.getMessageId() + " no fue encontrado.");
+
+            }
+
+        }catch (SQLException e) {
+            System.err.println("No se pudo eliminar el mensaje" + e.getMessage());
+
+        }
+
 
     }
 
+    public Message searchMessageById(int messageId) {
 
+        Message message = null;
+        String query = "select * from message where messageId = ?  ";
+
+        try {
+
+            Connection connection = dbConnection.getConnection();
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, messageId);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+
+                message = new Message();
+                message.setMessageId(rs.getInt(1));
+                message.setMessage(rs.getString(2));
+                message.setFullName(rs.getString(3));
+                message.setDate(rs.getString(4));
+            }
+            if (message ==null){
+                System.out.println("No se ha encontrado el mensaje con el "+ message.getMessageId());
+            }else {
+                System.out.println("Se encontro el mensaje con Id: " + message);
+            }
+
+
+        } catch (SQLException e) {
+            System.err.println("Error al crear mensaje: " + e.getMessage());
+        }
+        return message;
+    }
 }

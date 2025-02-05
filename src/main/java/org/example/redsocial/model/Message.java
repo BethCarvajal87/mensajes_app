@@ -51,4 +51,14 @@ public class Message {
     public void setFullName(String fullName) {
         this.fullName = fullName;
     }
+
+    @Override
+    public String toString() {
+        return "Message{" +
+                "messageId=" + messageId +
+                ", message='" + message + '\'' +
+                ", fullName='" + fullName + '\'' +
+                ", date='" + date + '\'' +
+                '}';
+    }
 }
