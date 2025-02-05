@@ -66,7 +66,26 @@ public class MessageDAO {
     return messagesList;
     }
 
-    public static void deleteMessageDB(Message mensaje){
+    public void deleteMessageDB(int messageId){
+
+        String query = "delete from message where messageId = ?";
+
+        try{
+            Connection connection = dbConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, messageId);
+            int countRowsUpdated = statement.executeUpdate();
+            if (countRowsUpdated != 0) {
+                System.out.println("El mensaje con id " + messageId + " ha sido eliminado correctamente.");
+            } else {
+                System.out.println("El mensaje con id " + messageId + " no fue encontrado.");
+            }
+
+
+        }catch (SQLException e) {
+            System.err.println("No se pudo eliminar el mensaje" + e.getMessage());
+
+        }
 
     }
     public static void updateMessageDB(Message mensajes){
