@@ -62,21 +62,26 @@ public class MessageService {
 
     }
     public void updateMessage(Scanner sc) {
+
         try {
             System.out.println("Indica el ID del mensaje que deseas actualizar: ");
             int messageId = sc.nextInt();
             sc.nextLine();
 
-            System.out.println("Escribe el nuevo texto del mensaje: ");
-            String newMessage = sc.nextLine();
-
-            System.out.println("Escribe el nuevo nombre : ");
-            String newFullName = sc.nextLine();
-
             Message updatedMessage = new Message();
             updatedMessage.setMessageId(messageId);
-            updatedMessage.setMessage(newMessage);
-            updatedMessage.setFullName(newFullName);
+
+            System.out.println("¿Deseas modificar el texto del mensaje? (s/n): ");
+            if (sc.nextLine().equalsIgnoreCase("s")) {
+                System.out.println("Escribe el nuevo texto del mensaje: ");
+                updatedMessage.setMessage(sc.nextLine());
+            }
+
+            System.out.println("¿Deseas modificar el nombre completo? (s/n): ");
+            if (sc.nextLine().equalsIgnoreCase("s")) {
+                System.out.println("Escribe el nuevo nombre: ");
+                updatedMessage.setFullName(sc.nextLine());
+            }
 
             messageDAO.updateMessageDB(updatedMessage);
 
