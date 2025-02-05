@@ -48,7 +48,15 @@ public class MessageService {
 
     }
 
-    public static void deleteMessage(){
+    public void deleteMessage(Scanner sc){
+        System.out.println("Indica el ID que deseas borrar:  ");
+        int messageId = sc.nextInt();
+
+        messageDAO.deleteMessageDB(messageId);
+
+
+
+
 
     }
     public static void updateMessage(){
