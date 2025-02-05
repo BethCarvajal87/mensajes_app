@@ -20,7 +20,8 @@ public class Main {
             System.out.println("2. Listar mensaje");
             System.out.println("3. Eliminar mensaje");
             System.out.println("4. Editar mensaje");
-            System.out.println("5. Salir");
+            System.out.println("5. buscar mensaje por id");
+            System.out.println("6. Salir");
 
             // Lee la opción del usuario
 
@@ -44,14 +45,17 @@ public class Main {
                     messageService.deleteMessage(sc);
                     break;
                 case 4:
-                    messageService.updateMessage();
+                    messageService.updateMessage(sc);
+                    break;
+                case 5:
+                    messageService.searchMessageById(sc);
                     break;
                 default:
                     break;
 
             }
 
-        }while (opcion !=5 );
+        }while (opcion !=6 );
 
         sc.close();
     }
