@@ -90,24 +90,52 @@ public class MessageDAO {
     }
 
     public void updateMessageDB(Message mensaje){
-        String query = "UPDATE message SET message = ?, fullName = ?, date = ? WHERE messageId = ?";
+        StringBuilder query = new StringBuilder("UPDATE message SET ");
+        List<Object> params = new ArrayList<>();
+        boolean hasUpdates = false;
+
+        if (mensaje.getMessage() != null) {
+            query.append("message = ?, ");
+            params.add(mensaje.getMessage());
+            hasUpdates = true;
+        }
+
+        if (mensaje.getFullName() != null) {
+            query.append("fullName = ?, ");
+            params.add(mensaje.getFullName());
+            hasUpdates = true;
+        }
+
+        if (mensaje.getDate() != null) {
+            query.append("date = ?, ");
+            params.add(new java.sql.Timestamp(System.currentTimeMillis()));
+            hasUpdates = true;
+        }
+
+        if (!hasUpdates) {
+            System.out.println("No se proporcionaron campos para actualizar.");
+            return;
+        }
+
+        query.setLength(query.length() - 2);
+
+        query.append(" WHERE messageId = ?");
+        params.add(mensaje.getMessageId());
+
 
         try{
             Connection connection = dbConnection.getConnection();
-            PreparedStatement ps  = connection.prepareStatement(query);
+            PreparedStatement ps  = connection.prepareStatement(query.toString());
 
-            ps.setString(1, mensaje.getMessage()); // Nuevo texto del mensaje
-            ps.setString(2, mensaje.getFullName()); // Nuevo nombre completo
-            ps.setTimestamp(3, new java.sql.Timestamp(System.currentTimeMillis()));
-            ps.setInt(4, mensaje.getMessageId());
-
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
             int countRowsUpdated = ps.executeUpdate();
 
             if (countRowsUpdated != 0) {
                 System.out.println("El mensaje con id " + mensaje.getMessageId() + " ha sido actualizado correctamente.");
             } else {
                 System.out.println("El mensaje con id " + mensaje.getMessageId() + " no fue encontrado.");
-
             }
 
         }catch (SQLException e) {
